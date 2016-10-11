@@ -5,16 +5,35 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+    protected TextView letter = null;
+    protected Button prev = null, next = null;
+    protected int index = 0;
+    protected int alphabet_length = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        alphabet_length = alphabet.length;
+        letter = (TextView) findViewById(R.id.letter);
+        letter.setText("" + alphabet[index]);
+
+        prev = (Button) findViewById(R.id.prev);
+        next = (Button) findViewById(R.id.next);
+        prev.setOnClickListener(this);
+        next.setOnClickListener(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -48,5 +67,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.next:
+                index = index == alphabet_length - 1 ? 0 : index + 1;
+                break;
+            case R.id.prev:
+                index = index == 0 ? (alphabet_length - 1) : index - 1;
+                break;
+            default:
+                break;
+        }
+        Log.d("INDEX", "" + index);
+        letter.setText("" + alphabet[index]);
     }
 }
