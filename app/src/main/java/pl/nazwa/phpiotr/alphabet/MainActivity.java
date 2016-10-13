@@ -1,8 +1,8 @@
 package pl.nazwa.phpiotr.alphabet;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected Button prev = null, next = null;
     protected int index = 0;
     protected int alphabet_length = 0;
+    protected boolean is_upper = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +38,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.manage);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                is_upper = !is_upper;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                    letter.setAllCaps(is_upper);
+                } else {
+                    if (is_upper) {
+                        letter.setText(("" + alphabet[index]).toLowerCase());
+                    } else {
+                        letter.setText(("" + alphabet[index]).toUpperCase());
+                    }
+                }
+               /* Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
             }
         });
     }
@@ -82,6 +93,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
         Log.d("INDEX", "" + index);
-        letter.setText("" + alphabet[index]);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            if (is_upper) {
+                letter.setText(("" + alphabet[index]).toLowerCase());
+            } else {
+                letter.setText(("" + alphabet[index]).toUpperCase());
+            }
+        } else {
+            letter.setText("" + alphabet[index]);
+        }
     }
 }
